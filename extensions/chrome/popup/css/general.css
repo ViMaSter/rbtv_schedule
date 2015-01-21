@@ -1,0 +1,59 @@
+/* GENERAL */
+html, body {
+	margin: 0px;
+	font-family: 'Open Sans', sans-serif; 
+	font-size: 14px;
+	overflow: hidden;
+}
+
+body {
+	width: 0px;
+	height: 0px;
+	transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+body.loading {
+	width: 24px;
+	height: 24px;
+}
+body:not(.loading) .loading {
+	display: none;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table .time {
+	width: 70px;
+	min-width: 70px;
+	max-width: 70px;
+}
+table .title {
+	width: 200px;
+	min-width: 200px;
+	max-width: 200px;
+}
+table .tag {
+	width: 40px;
+	min-width: 40px;
+	max-width: 40px;
+
+	padding-right: 0px;
+
+	text-align: right;
+}
+table .day {
+	text-align: right;
+}
+
+table .day:after {
+	content: ',';
+}
+table .time:after {
+	content: ' Uhr';
+}
+
+table .more {
+	text-align: center;
+}

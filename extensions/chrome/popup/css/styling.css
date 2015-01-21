@@ -1,0 +1,90 @@
+/* TABLE STYLING */
+table .day {
+	padding-right: 5px;
+}
+table .time {
+	padding-right: 10px;
+}
+table .tag {
+	padding-right: 10px;
+}
+
+table .tag.Live {
+	background-color: rgb(255, 100, 100);
+	color: rgb(100, 0, 0);
+}
+
+table .tag.Neu {
+	background-color: rgb(255, 250, 100);
+	color: rgb(130, 130, 30);
+}
+
+table td {
+	padding: 3px 2px;
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+table .sent tr {
+	background-color: rgb(230, 230, 230);
+	color: rgb(190, 190, 190);
+}
+table .now tr {
+	background-color: rgb(160, 230, 160);
+	color: rgb(0, 100, 0);
+}
+table .comingup tr {
+	background-color: rgb(160, 220, 230);
+	color: rgb(10, 70, 155);
+}
+
+/* BUTTONS */
+.buttons {
+	width: 100%;
+	margin: 0px;
+	padding: 0px;
+	font-size: 0px;
+
+	text-align: center;
+
+	background-color: rgb(0, 0, 0);
+}
+.buttons > a {
+	display: inline-block;
+
+	height: 50px;
+	width: 20%;
+	background-color: black;
+	background-position: 50% 50%;
+	background-size: auto 25px;
+	background-repeat: no-repeat;
+
+	background-color: rgb(0, 0, 0);
+
+	text-decoration: none;
+
+	transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.buttons > a:hover {
+	background-color: rgb(50, 50, 50);
+
+	text-decoration: none;
+}
+.buttons .web {
+	background-image: url('../img/buttons/web.png');
+}
+.buttons .amazon {
+	background-image: url('../img/buttons/amazon.png');
+	background-size: auto 10px;
+}
+.buttons .twitch {
+	background-image: url('../img/buttons/twitch.png');
+}
+.buttons .reddit {
+	background-image: url('../img/buttons/reddit.png');
+}
+.buttons .reminder.on {
+	background-image: url('../img/buttons/remind_on.png');
+}
+.buttons .reminder.off {
+	background-image: url('../img/buttons/remind_off.png');
+}
