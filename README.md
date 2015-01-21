@@ -1,6 +1,9 @@
 # RocketBeans.TV Programmguide Browser Extension
 For more detailed info about the use of this tool, please refer to the [corresponsing reddit-post  [GER]](http://www.reddit.com/r/rocketbeans/comments/2stjlk/rocketbeanstv_chrome_erweiterung/). 
 
+## Download
+As of right now, preparing download- and executable packages has to be done manually. Either clone the repository and package the tools yourself or take a look at the [corresponsing reddit-post  [GER]](http://www.reddit.com/r/rocketbeans/comments/2stjlk/rocketbeanstv_chrome_erweiterung/).
+
 ## Currently supported browsers
 *  **Google Chrome**: Tested under 39.0.2171.99 - Working on download through Chrome Web Store
 *  **Safari**: Port of current version in progress
