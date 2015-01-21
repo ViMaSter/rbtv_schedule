@@ -1,0 +1,34 @@
+{
+	"manifest_version": 2,
+
+	"name": "RocketBeans.TV Programmguide",
+	"short_name": "RB.TV Programm",
+	"description": "Chrome-Extention für den RocketBeans.TV-Livesender",
+	"version": "0.2.0",
+
+	"icons": {
+		"128": "icon.png"
+	},
+
+	"browser_action": {
+		"default_icon": "icon.png",
+		"default_popup": "popup/index.html"
+	},
+
+	"background": {
+		"page": "background/index.html",
+		"persistent": true
+	},
+
+	"permissions": [
+		"activeTab",
+		"background",
+		"alarms",
+		"https://stats.g.doubleclick.net/*",
+		"https://www.google.com/*",
+		"http://static-cdn.jtvnw.net/",
+		"http://vimaster.de/"
+	],
+
+	"content_security_policy": "script-src 'self' https://stats.g.doubleclick.net https://www.google.com; object-src 'self'"
+}
