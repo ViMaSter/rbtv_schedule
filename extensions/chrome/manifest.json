@@ -21,8 +21,9 @@
 	},
 
 	"permissions": [
-		"activeTab",
+		"tabs",
 		"background",
+		"notifications",
 		"alarms",
 		"https://stats.g.doubleclick.net/*",
 		"https://www.google.com/*",

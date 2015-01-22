@@ -53,6 +53,51 @@ window.settings = {
 	}
 };
 
+////
+/// Parser and tool-specific helper functions
+//// 
+function orderShowsByBegin(a, b) {
+	var timeA = new Date(parseicsDate(a.dtstart[0].value));
+	var timeB = new Date(parseicsDate(b.dtstart[0].value));
+	if ( timeA == timeB ) {
+		return 0;
+	}
+
+	return ( timeA < timeB ) ? -1 : 1;
+}
+
+// prepares the icsObjects to eliminate unnecessary info
+function generateJSON(icsEvents) {
+	icsEvents.sort(orderShowsByBegin);
+
+	var availableShows = {
+		"sent": [],
+		"now": [],
+		"comingup": []
+	};
+
+	for (i = 0; i < icsEvents.length; i++) {
+		var date = parseicsDate(icsEvents[i].dtstart[0].value);
+		if ( date < new Date() ) {
+			availableShows.sent.push({
+				"id": icsEvents[i].uid[0].value,
+				"title": icsEvents[i].summary[0].value,
+				"date": date
+			});
+		} else {
+			availableShows.comingup.push({
+				"id": icsEvents[i].uid[0].value,
+				"title": icsEvents[i].summary[0].value,
+				"date": date
+			});
+		}
+	}
+
+	availableShows.now.push( availableShows.sent.pop() );
+
+	return availableShows;
+}
+
 
 
 if ( Object.keys(settings.get()).indexOf("live_alert") <= -1) {
@@ -87,6 +132,25 @@ function isLiveColor(r, g, b) {
 	);
 }
 
+function updateSchedule() {
+	// ajax-request for .ics-file
+	var url = "https://www.google.com/calendar/ical/h6tfehdpu3jrbcrn9sdju9ohj8%40group.calendar.google.com/public/basic.ics";
+	var data = "";
+	var method = 'GET';
+	var async = true;
+
+	doAjax(url, method, async, function (content) {
+		if (this.readyState==4 && this.status==200) {		
+			icalParser.parseIcal(this.responseText);
+
+			// update the schedule only if the ajax-content is parsable and not empty
+			if (icalParser.icals[0].events.length > 0) {
+				showArchive.set(generateJSON(icalParser.icals[0].events));
+			}
+		}
+	}, data);
+}
+
 var beansAreLiveState = -2;
 function beansAreLive() {
 	var ctx = document.querySelector("canvas").getContext("2d");
@@ -104,6 +168,7 @@ function beansAreLive() {
 	imgObj.src = "http://static-cdn.jtvnw.net/previews-ttv/live_user_rocketbeanstv-1280x720.jpg?time="+(new Date().getTime());
 }
 
+var isLiveNotification = 0;
 function beansAreLiveCallback(response) {
 	setBrowserIcon(response);
 	switch (response) {
@@ -118,10 +183,34 @@ function beansAreLiveCallback(response) {
 		case 1:
 			// live
 			if (beansAreLiveState != -2 && beansAreLiveState != 1 && settings.get()["live_alert"]==1) {
-				if (confirm("RocketBeans.TV ist live!\nEinschalten?")) {
-					var newURL = "http://www.twitch.tv/rocketbeanstv";
-					chrome.tabs.create({ url: newURL });
-				}
+				chrome.tabs.query({
+					url: "*://*.twitch.tv/rocketbeanstv*"
+				}, function (foundTabs) {
+
+					var showCache = showArchive.get();
+					var title = showCache.now[0].title.replace(/\[\w\]\s*/, "");
+
+					if (foundTabs.length > 0) {
+						if (showCache.now.length >= 1) {
+							currentShowString = 'Und zwar mit "'+title+'"! ';
+						}
+
+						var isLiveNotification = new Notification("Hey, die Beans sind live!", {
+							icon: '/img/icon/80/live.png',
+							body: currentShowString+"Aber du bist schon auf Twitch, also anklicken und zum Tab wechseln!"
+						});
+						isLiveNotification.onclick = function () {
+							chrome.tabs.update(foundTabs[0].id, {selected: true});
+						};
+
+					} else {
+						// twitch is not open
+						if (confirm("RocketBeans.TV ist live!\nLaut Plan dran: \""+title+"\". \n\nEinschalten?")) {
+							var newURL = "http://www.twitch.tv/rocketbeanstv";
+							chrome.tabs.create({ url: newURL });
+						}
+					}
+				});
 			}
 			break;
 	}
@@ -133,5 +222,10 @@ function beansAreLiveCallback(response) {
 	beansAreLiveState = response;
 }
 
-window.onload = beansAreLive;
-setInterval(beansAreLive, 6000);
+window.onload = function () {
+	beansAreLive();
+	updateSchedule();
+};
+
+setInterval(beansAreLive, 6 * 1000);
+setInterval(updateSchedule, 5 * 60 * 1000);
