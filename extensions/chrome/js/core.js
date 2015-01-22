@@ -131,26 +131,6 @@ function renderJSONContent(content) {
 	}
 }
 
-function parseicsDate(dateString) {
-	var dateRegex = /(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z/;
-	var parsedDate = dateString.match(dateRegex);
-
-	// use setUTC* instead of the constructor, to take timezones into account
-	//  (Google returns the dates in the ICS-file in UTC)
-	var date = new Date();
-	date.setUTCFullYear(
-		parsedDate[1],
-		parseInt(parsedDate[2])-1,
-		parsedDate[3]
-	);
-	date.setUTCHours(
-		parsedDate[4],
-		parsedDate[5],
-		parsedDate[6]
-	);
-	return date;
-}
-
 // prepares the icsObjects to eliminate unnecessary info
 function generateJSON(icsEvents) {
 	icsEvents.sort(orderShowsByBegin);
@@ -184,42 +164,31 @@ function generateJSON(icsEvents) {
 }
 
 function initalLoad(content) {
-	if (this.readyState==4 && this.status==200) {		
-		icalParser.parseIcal(this.responseText);
+	// only show the specified amount of shows
+	var shownShows = showArchive.get();
+	var remaining = settings.get()["showRequest_limit"];
 
-		// update the schedule only if the ajax-content is parsable and not empty
-		if (icalParser.icals[0].events.length > 0) {
-			showArchive.set(generateJSON(icalParser.icals[0].events));
-		}
-
-		// only show the specified amount of shows
-		var shownShows = showArchive.get();
-		var remaining = settings.get()["showRequest_limit"];
-
-		if (settings.get()["showRequest_startAt"] < 0) {	
-			shownShows.sent = shownShows.sent.slice( shownShows.sent.length+settings.get()["showRequest_startAt"] );
-			remaining -= shownShows.sent.length;
-		} else {
-			shownShows.sent = [];
-		}
-
-		if (settings.get()["showRequest_startAt"] <= 0 && remaining > 0) {
-			shownShows.now = shownShows.now;
-			remaining -= shownShows.now.length;
-		} else {
-			shownShows.now = [];
-		}
-
-		if (remaining > 0) {
-			shownShows.comingup = shownShows.comingup.slice( 0, remaining );
-		} else {
-			shownShows.comingup = [];
-		}
-
-		console.log(shownShows);
-
-		renderJSONContent(shownShows);
+	if (settings.get()["showRequest_startAt"] < 0) {	
+		shownShows.sent = shownShows.sent.slice( shownShows.sent.length+settings.get()["showRequest_startAt"] );
+		remaining -= shownShows.sent.length;
+	} else {
+		shownShows.sent = [];
 	}
+
+	if (settings.get()["showRequest_startAt"] <= 0 && remaining > 0) {
+		shownShows.now = shownShows.now;
+		remaining -= shownShows.now.length;
+	} else {
+		shownShows.now = [];
+	}
+
+	if (remaining > 0) {
+		shownShows.comingup = shownShows.comingup.slice( 0, remaining );
+	} else {
+		shownShows.comingup = [];
+	}
+
+	renderJSONContent(shownShows);
 }
 
 ////
@@ -244,25 +213,6 @@ function openTab(type) {
 	}
 }
 
-function clearStorage() {
-	delete localStorage["rb_settings"];
-	delete localStorage["rb_showArchive"];
-}
-
-function initStorage() {
-	if (Object.keys(localStorage).indexOf("rb_settings") == -1 ) {
-		settings.set ( {
-			"live_alert": 1,
-			"showRequest_startAt": -3,
-			"showRequest_limit": 13
-		} );
-	}
-
-	if (Object.keys(localStorage).indexOf("rb_showArchive") == -1 ) {
-		showArchive.set( [] );
-	}
-}
-
 document.addEventListener('DOMContentLoaded', function() {
 	initStorage();
 
@@ -276,11 +226,5 @@ document.addEventListener('DOMContentLoaded', function() {
 	document.querySelector(".buttons .reddit").onclick = function () { openTab("reddit"); };
 	document.querySelector(".buttons .reminder").onclick = function () { toggleAlarm(); };
 
-	// ajax-request for .ics-file
-	var url = "https://www.google.com/calendar/ical/h6tfehdpu3jrbcrn9sdju9ohj8%40group.calendar.google.com/public/basic.ics";
-	var data = "";
-	var method = 'GET';
-	var async = true;
-
-	doAjax(url, method, async, initalLoad, data);
+	initalLoad();
 });
