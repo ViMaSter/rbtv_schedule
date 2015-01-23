@@ -105,7 +105,7 @@ function renderEvent(eventObj) {
 	return '<tr><td class="tag {0}">{1}</td><td class="day">{2}</td><td class="time">{3}</td><td class="title">{4}</td></tr>'.format(
 		tagClass,
 		tagClass == "" ? "" : classes[tagClass].content,
-		((today.setHours(0, 0, 0, 0) == eventDate.setHours(0, 0, 0, 0)) ? "heute" : localizedDays.days[eventObj.date.getDay()-1] ).capitalizeFirstLetter(),
+		((today.setHours(0, 0, 0, 0) == eventDate.setHours(0, 0, 0, 0)) ? "heute" : localizedDays.days[eventObj.date.getDay()] ).capitalizeFirstLetter(),
 		eventObj.date.getHours().pad(2) + ":" + eventObj.date.getMinutes().pad(2),
 		eventObj.title.replace(/^\[\w\s*\]/, "")
 	);
