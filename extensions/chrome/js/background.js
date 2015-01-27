@@ -141,6 +141,7 @@ function updateSchedule() {
 
 	doAjax(url, method, async, function (content) {
 		if (this.readyState==4 && this.status==200) {		
+			icalParser.icals = [];
 			icalParser.parseIcal(this.responseText);
 
 			// update the schedule only if the ajax-content is parsable and not empty
