@@ -4,7 +4,7 @@
 	"name": "RocketBeans.TV Programmguide",
 	"short_name": "RB.TV Programm",
 	"description": "Chrome-Extention für den RocketBeans.TV-Livesender",
-	"version": "0.2.1",
+	"version": "0.2.2d",
 
 	"icons": {
 		"128": "icon.png"
@@ -21,6 +21,7 @@
 	},
 
 	"permissions": [
+		"activeTab",
 		"tabs",
 		"background",
 		"notifications",
