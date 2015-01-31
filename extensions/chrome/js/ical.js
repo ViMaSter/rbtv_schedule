@@ -84,7 +84,7 @@ var icalParser = {
 }
 
 function parseicsDate(dateString) {
-    var dateRegex = /(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z/;
+    var dateRegex = /(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z*/;
     var parsedDate = dateString.match(dateRegex);
 
     // use setUTC* instead of the constructor, to take timezones into account
