@@ -77,7 +77,6 @@ function generateJSON(icsEvents) {
 	};
 
 	for (i = 0; i < icsEvents.length; i++) {
-		console.log(icsEvents[i].dtstart[0]);
 		var date = parseicsDate(icsEvents[i].dtstart[0].value, icsEvents[i].dtstart[0].params);
 		if ( date < new Date() ) {
 			availableShows.sent.push({
