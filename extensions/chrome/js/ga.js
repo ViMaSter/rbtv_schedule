@@ -1,7 +1,7 @@
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-52151894-4']);
-_gaq.push(['_setCustomVar', 1, 'Version', '0.2.2s']);
-console.log("0.2.2s");
+_gaq.push(['_setCustomVar', 1, 'Version', '0.2.3']);
+console.log("0.2.3");
 _gaq.push(['_trackPageview']);
 
 (function() {
