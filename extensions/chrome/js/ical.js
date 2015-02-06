@@ -83,22 +83,35 @@ var icalParser = {
     },
 }
 
-function parseicsDate(dateString) {
+function parseicsDate(dateString, param) {
     var dateRegex = /(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z*/;
     var parsedDate = dateString.match(dateRegex);
 
     // use setUTC* instead of the constructor, to take timezones into account
     //  (Google returns the dates in the ICS-file in UTC)
     var date = new Date();
-    date.setUTCFullYear(
-        parsedDate[1],
-        parseInt(parsedDate[2])-1,
-        parsedDate[3]
-    );
-    date.setUTCHours(
-        parsedDate[4],
-        parsedDate[5],
-        parsedDate[6]
-    );
+    if (typeof param == "undefined") {
+        date.setUTCFullYear(
+            parsedDate[1],
+            parseInt(parsedDate[2])-1,
+            parsedDate[3]
+        );
+        date.setUTCHours(
+            parsedDate[4],
+            parsedDate[5],
+            parsedDate[6]
+        );
+    } else {
+        date.setFullYear(
+            parsedDate[1],
+            parseInt(parsedDate[2])-1,
+            parsedDate[3]
+        );
+        date.setHours(
+            parsedDate[4],
+            parsedDate[5],
+            parsedDate[6]
+        );
+    }
     return date;
 }

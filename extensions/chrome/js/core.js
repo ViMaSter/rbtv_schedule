@@ -77,8 +77,8 @@ var classes = {
 /// Parser and tool-specific helper functions
 //// 
 function orderShowsByBegin(a, b) {
-	var timeA = new Date(parseicsDate(a.dtstart[0].value));
-	var timeB = new Date(parseicsDate(b.dtstart[0].value));
+	var timeA = new Date(parseicsDate(a.dtstart[0].value, a.dtstart[0].params));
+	var timeB = new Date(parseicsDate(b.dtstart[0].value, b.dtstart[0].params));
 	if ( timeA == timeB ) {
 		return 0;
 	}
@@ -142,7 +142,7 @@ function generateJSON(icsEvents) {
 	};
 
 	for (i = 0; i < icsEvents.length; i++) {
-		var date = parseicsDate(icsEvents[i].dtstart[0].value);
+		var date = parseicsDate(icsEvents[i].dtstart[0].value, icsEvents[i].dtstart[0].params);
 		if ( date < new Date() ) {
 			availableShows.sent.push({
 				"id": icsEvents[i].uid[0].value,
